@@ -16,19 +16,21 @@ def run_server():
 
     sum = 0
 
-    # receive data from client
     while True:
 
-        addendum = client_socket.recv(1024).decode("ascii")
+        msg = client_socket.recv(1024).decode("ascii").strip()
+        print(msg)
 
-        if addendum == "_":
+        if msg == "=":
             break
         else:
-            sum += int(addendum)
+            sum += int(msg)
 
     response = str(sum).encode("ascii")
     client_socket.send(response)
 
+    client_socket.send("closed".encode("ascii"))
+    
     client_socket.close()
     print("Connection to client close")
     server.close()
