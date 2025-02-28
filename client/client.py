@@ -10,19 +10,34 @@ def run_client():
 
     try:
         while True:
+            msg = ""
 
-            msg = input("Enter: ")
-            client.send(msg.encode("ascii")[:1024])
+            while True: 
+                if msg == "=":
+                    # the recv system call is used to receive messages from a socket
+                    response = client.recv(1024)
+                    response = response.decode("ascii")
+                    print(f"Received: { response }")
 
-            if msg == "=":
+                    break  
+
+                elif msg == "close":
+                    break 
+
+                else:
+                    msg = input("Enter: ")
+                    client.send(msg.encode("ascii"))
+
+            if msg == "close":
+                client.send(msg.encode("ascii"))
                 response = client.recv(1024)
                 response = response.decode("ascii")
-                print(f"Received: {response}")
+                print(f"Received: { response }")
 
-                break
+                break       
 
     except Exception as e:
-        print(f"Error: {e}")
+        print(f"Error: { e }")
     
     finally:
         client.close()
